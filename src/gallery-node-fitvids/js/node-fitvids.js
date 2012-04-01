@@ -49,6 +49,7 @@ var CLASS_NAME = Y.ClassNameManager.getClassName('fluid-width-video-wrapper'),
 	SELECTORS = [
 		'iframe[src^="http://player.vimeo.com"]',
 		'iframe[src^="http://www.youtube.com"]',
+		'iframe[src^="https://www.youtube.com"]',
 		'iframe[src^="http://www.kickstarter.com"]',
 		'object',
 		'embed'
