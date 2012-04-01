@@ -1,5 +1,5 @@
 /**
- *
+ * <p>The FitVids Node Plugin transforms video embeds into fluid width video embeds.
  *
  * <p>
  * <code>
@@ -9,11 +9,11 @@
  *       //  load the script and CSS for the FitVids Node Plugin and all of <br>
  *       //  the required dependencies. <br>
  * <br>
- *       YUI().use("gallery-node-fitvids", function(Y) { <br>
+ *       YUI().use('gallery-node-fitvids', 'event-base', function(Y) { <br>
  * <br>
- *           //  Use the "contentready" event to initialize the accordion when <br>
- *           //  the element that represente the accordion <br>
- *           //  (&#60;div id="accordion-1"&#62;) is ready to be scripted. <br>
+ *           //  Use the 'contentready' event to initialize fitvids when <br>
+ *           //  the element that contains the video embed<br>
+ *           //  is ready to be scripted. <br>
  * <br>
  *           Y.on('contentready', function () { <br>
  * <br>
@@ -33,11 +33,7 @@
  * </code>
  * </p>
  *
- * Based on FitVids 1.0
- *
- * Copyright 2011, Chris Coyier - http://css-tricks.com + Dave Rupert - http://daverupert.com
- * Credit to Thierry Koblentz - http://www.alistapart.com/articles/creating-intrinsic-ratios-for-video/
- * Released under the WTFPL license - http://sam.zoy.org/wtfpl/
+ * Based on FitVids - https://github.com/davatron5000/FitVids.js
  *
  * @module gallery-node-fitvids
  */
@@ -69,6 +65,7 @@ function getSelectors(customSelector) {
 }
 
 /**
+ * FitVids Node Plugin.
  *
  * @namespace Y.Plugin
  * @class NodeFitVids
@@ -154,8 +151,8 @@ Y.namespace('Plugin').NodeFitVids = Y.Base.create('NodeFitVids', Y.Plugin.Base, 
 	
 	ATTRS: {
 		/**
-		 *
 		 * @attribute customSelector
+		 * @description Video vendor selector if none of the default selectors match the the player you wish to target.
 		 * @type String
 		 * @writeOnce
 		 */
