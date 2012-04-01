@@ -1,7 +1,7 @@
 YUI.add('gallery-node-fitvids', function(Y) {
 
 /**
- *
+ * <p>The FitVids Node Plugin transforms video embeds into fluid width video embeds.
  *
  * <p>
  * <code>
@@ -11,11 +11,11 @@ YUI.add('gallery-node-fitvids', function(Y) {
  *       //  load the script and CSS for the FitVids Node Plugin and all of <br>
  *       //  the required dependencies. <br>
  * <br>
- *       YUI().use("gallery-node-fitvids", function(Y) { <br>
+ *       YUI().use('gallery-node-fitvids', 'event-base', function(Y) { <br>
  * <br>
- *           //  Use the "contentready" event to initialize the accordion when <br>
- *           //  the element that represente the accordion <br>
- *           //  (&#60;div id="accordion-1"&#62;) is ready to be scripted. <br>
+ *           //  Use the 'contentready' event to initialize fitvids when <br>
+ *           //  the element that contains the video embed<br>
+ *           //  is ready to be scripted. <br>
  * <br>
  *           Y.on('contentready', function () { <br>
  * <br>
@@ -35,11 +35,7 @@ YUI.add('gallery-node-fitvids', function(Y) {
  * </code>
  * </p>
  *
- * Based on FitVids 1.0
- *
- * Copyright 2011, Chris Coyier - http://css-tricks.com + Dave Rupert - http://daverupert.com
- * Credit to Thierry Koblentz - http://www.alistapart.com/articles/creating-intrinsic-ratios-for-video/
- * Released under the WTFPL license - http://sam.zoy.org/wtfpl/
+ * Based on FitVids - https://github.com/davatron5000/FitVids.js
  *
  * @module gallery-node-fitvids
  */
@@ -55,6 +51,7 @@ var CLASS_NAME = Y.ClassNameManager.getClassName('fluid-width-video-wrapper'),
 	SELECTORS = [
 		'iframe[src^="http://player.vimeo.com"]',
 		'iframe[src^="http://www.youtube.com"]',
+		'iframe[src^="https://www.youtube.com"]',
 		'iframe[src^="http://www.kickstarter.com"]',
 		'object',
 		'embed'
@@ -71,6 +68,7 @@ function getSelectors(customSelector) {
 }
 
 /**
+ * FitVids Node Plugin.
  *
  * @namespace Y.Plugin
  * @class NodeFitVids
@@ -79,8 +77,7 @@ function getSelectors(customSelector) {
 Y.namespace('Plugin').NodeFitVids = Y.Base.create('NodeFitVids', Y.Plugin.Base, [], {
 	initializer: function(config) {
 		var host = this.get('host'),
-			query = getSelectors(this.get('customSelector')),
-			self = this;
+			query = getSelectors(this.get('customSelector'));
 
 		if (!Y.instanceOf(host, Y.Node)) {
 			return;
@@ -89,6 +86,8 @@ Y.namespace('Plugin').NodeFitVids = Y.Base.create('NodeFitVids', Y.Plugin.Base, 
 		host.all(query).each(function() {
 			var tagName = this.get('tagName'),
 				parentNode = this.get('parentNode'),
+				heightAttr = this.get('height'),
+				widthAttr = this.get('width'),
 				data = {},
 				height,
 				width,
@@ -98,20 +97,20 @@ Y.namespace('Plugin').NodeFitVids = Y.Base.create('NodeFitVids', Y.Plugin.Base, 
 				return;
 			}
 
-			height = tagName === 'OBJECT' ? this.get('height') : this.getComputedStyle('height');
+			height = tagName === 'OBJECT' ? heightAttr : this.getComputedStyle('height');
 			width = this.getComputedStyle('width');
 			aspectRatio = parseInt(height, 10) / parseInt(width, 10);
 
 			this.wrap('<div class="' + CLASS_NAME + '"></div>');
 			this.ancestor(ANCESTOR_SELECTOR).setStyle('paddingTop', (aspectRatio * 100) + '%');
 
-			if (this.get('height')) {
-				data.height = this.get('height');
+			if (heightAttr) {
+				data.height = heightAttr;
 				this.removeAttribute('height');
 			}
 			
-			if (this.get('width')) {
-				data.width = this.get('width');
+			if (widthAttr) {
+				data.width = widthAttr;
 				this.removeAttribute('width');
 			}
 
@@ -123,8 +122,7 @@ Y.namespace('Plugin').NodeFitVids = Y.Base.create('NodeFitVids', Y.Plugin.Base, 
 	
 	destructor: function() {
 		var host = this.get('host'),
-			query = getSelectors(this.get('customSelector')),
-			self = this;
+			query = getSelectors(this.get('customSelector'));
 		
 		if (!Y.instanceOf(host, Y.Node)) {
 			return;
@@ -156,8 +154,8 @@ Y.namespace('Plugin').NodeFitVids = Y.Base.create('NodeFitVids', Y.Plugin.Base, 
 	
 	ATTRS: {
 		/**
-		 *
 		 * @attribute customSelector
+		 * @description Video vendor selector if none of the default selectors match the the player you wish to target.
 		 * @type String
 		 * @writeOnce
 		 */

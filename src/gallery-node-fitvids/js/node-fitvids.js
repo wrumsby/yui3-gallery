@@ -95,7 +95,7 @@ Y.namespace('Plugin').NodeFitVids = Y.Base.create('NodeFitVids', Y.Plugin.Base, 
 				return;
 			}
 
-			heigh = tagName === 'OBJECT' ? heightAttr : this.getComputedStyle('height');
+			height = tagName === 'OBJECT' ? heightAttr : this.getComputedStyle('height');
 			width = this.getComputedStyle('width');
 			aspectRatio = parseInt(height, 10) / parseInt(width, 10);
 
