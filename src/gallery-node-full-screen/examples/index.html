@@ -45,11 +45,17 @@
 			<div id="specialstuff">
 				<p>Inside here is special stuff which will go fullscreen</p>
 
-				<p>Status: <span id="fsstatus"></span>
+				<p>Status: <span id="fsstatus"></span></p>
+				<input type="button" value="Exit Fullscreen" id="fsexit" disabled="disabled"/>
 			</div>
 
 			<input type="button" value="Go Fullscreen" id="fsbutton" disabled="disabled"/>
+
+			<p>
+				Code and example based on <a href="http://johndyer.name/lab/fullscreenapi/">John Dyer&apos;s example</a>.
+			</p>
 		</div>
+		
 		
 		<script type="text/javascript" src="http://yui.yahooapis.com/3.5.0/build/yui/yui-debug.js"></script>
 		<script type="text/javascript" src="../../../build/gallery-full-screen/gallery-full-screen-debug.js"></script>
@@ -65,6 +71,7 @@
 				
 				var status = Y.one('#fsstatus'),
 					button = Y.one('#fsbutton'),
+					exit = Y.one('#fsexit'),
 					node = Y.one('#specialstuff');
 				
 				if (!Y.FullScreen.isSupported()) {
@@ -82,11 +89,19 @@
 					node.fullScreen.request();
 				});
 				
+				exit.on('click', function(e) {
+					Y.FullScreen.exit();
+				});
+				
 				Y.on('fullScreen:change', function(e) {
 					if (Y.FullScreen.isEnabled()) {
 						status.set('text', 'Whoa, you went fullscreen');
+						exit.removeAttribute('disabled');
+						button.setAttribute('disabled', 'disabled');
 					} else {
 						status.set('text', 'Back to normal');
+						exit.setAttribute('disabled', 'disabled');
+						button.removeAttribute('disabled');
 					}
 				});
 			});
