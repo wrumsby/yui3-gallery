@@ -173,4 +173,4 @@ if (Y.FullScreen.isSupported()) {
 }
 
 
-}, '@VERSION@' ,{requires:['arraylist', 'base-build', 'node-core', 'node-base'], skinnable:false});
+}, 'gallery-2012.05.30-21-22' ,{requires:['arraylist', 'base-build', 'node-core', 'node-base'], skinnable:false});

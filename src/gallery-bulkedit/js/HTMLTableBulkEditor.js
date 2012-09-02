@@ -23,7 +23,7 @@ HTMLTableBulkEditor.ATTRS =
 	/**
 	 * Configuration for each column: key, label, formatter.
 	 *
-	 * @config columns
+	 * @attribute columns
 	 * @type {Array}
 	 * @writeonce
 	 */
@@ -42,7 +42,7 @@ HTMLTableBulkEditor.ATTRS =
 	 * <p>Attaching events to the container before the table is created does
 	 * not work in all browsers.</p>
 	 *
-	 * @config events
+	 * @attribute events
 	 * @type {Array}
 	 * @writeonce
 	 */
@@ -208,7 +208,7 @@ Y.extend(HTMLTableBulkEditor, BulkEditor,
 		{
 			while (this.table.get('children').size() > 1)
 			{
-				this.table.get('lastChild').remove();
+				this.table.get('lastChild').remove(true);
 			}
 		}
 	},

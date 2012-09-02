@@ -73,4 +73,8 @@ Y.namespace('Plugin').NodeFullScreen = Y.Base.create('NodeFullScreen', Y.Plugin.
 });
 
 
+<<<<<<< HEAD
 }, '@VERSION@' ,{requires:['gallery-full-screen', 'plugin', 'base-build', 'node-pluginhost'], skinnable:false});
+=======
+}, 'gallery-2012.05.02-20-10' ,{requires:['gallery-full-screen', 'plugin', 'base-build', 'node-pluginhost'], skinnable:false});
+>>>>>>> original/master

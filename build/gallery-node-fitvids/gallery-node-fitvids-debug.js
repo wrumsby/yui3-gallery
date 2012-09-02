@@ -164,4 +164,8 @@ Y.namespace('Plugin').NodeFitVids = Y.Base.create('NodeFitVids', Y.Plugin.Base, 
 });
 
 
+<<<<<<< HEAD
 }, '@VERSION@' ,{skinnable:true, requires:['plugin', 'base-build', 'node-base', 'node-style', 'node-pluginhost', 'classnamemanager']});
+=======
+}, 'gallery-2012.06.06-19-59' ,{skinnable:true, requires:['plugin', 'base-build', 'node-base', 'node-style', 'node-pluginhost', 'classnamemanager']});
+>>>>>>> original/master

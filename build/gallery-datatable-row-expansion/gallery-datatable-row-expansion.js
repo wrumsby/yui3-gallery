@@ -2,19 +2,25 @@ YUI.add('gallery-datatable-row-expansion', function(Y) {
 
 "use strict";
 
+/**
+ * @module gallery-datatable-row-expansion
+ */
+
 /**********************************************************************
  * <p>Plugin for DataTable to show additional information for each row via
- * a twistdown.  The result of the template is displayed across all the
- * columns following the twistdown column.</p>
+ * a twistdown.  The result of the template is displayed spanning all the
+ * columns beyond the twistdown column.</p>
+ * 
+ * <p>This class patches `getCell` and `getRow` to ignore the additional
+ * rows created by this plugin.</p>
  *
- * @module gallery-datatable-row-expansion
- * @namespace Plugin
+ * @main gallery-datatable-row-expansion
  * @class DataTableRowExpansion
+ * @namespace Plugin
  * @extends Plugin.Base
  * @constructor
  * @param config {Object} configuration
  */
-
 function RowExpansion(
 	/* object */ config)
 {
@@ -27,10 +33,11 @@ RowExpansion.NS   = "rowexpander";
 RowExpansion.ATTRS =
 {
 	/**
-	 * (Required) String template or function that returns a string.
+	 * String template or function that returns a string.
 	 *
-	 * @config template
+	 * @attribute template
 	 * @type {String|Function}
+	 * @required
 	 */
 	template:
 	{
@@ -42,12 +49,13 @@ RowExpansion.ATTRS =
 	},
 
 	/**
-	 * (Required) Id of a column (usually not displayed) that yields a
+	 * Id of a column (usually not displayed) that yields a
 	 * unique value for each record.  Used to maintain the twistdown state
 	 * when paginating.
 	 *
-	 * @config uniqueIdKey
+	 * @attribute uniqueIdKey
 	 * @type {String}
+	 * @required
 	 */
 	uniqueIdKey:
 	{
@@ -190,10 +198,10 @@ var cell = table.getCell(e.taregt, [0, 1];</pre></code>
    cell Node
 @return {Node}
 @since 3.5.0
-**/
+*/
 function getCell(seed, shift)
 {
-	var tbody = this.get('container'),
+	var tbody = this.tbodyNode,
 		row, cell;
 
 	if (seed && tbody)
@@ -274,25 +282,33 @@ found by the input, `null` is returned.
 @param {Number|String|Model} id Row index, Model instance, or clientId
 @return {Node}
 @since 3.5.0
-**/
+*/
 function getRow(id)
 {
-	var tbody = this.get('container') || null;
+	var tbody = this.tbodyNode,
+		row   = null;
 
-	if (id)
+	if (tbody)
 	{
-		id = this._idMap[id.get ? id.get('clientId') : id] || id;
+		if (id)
+		{
+			id = this._idMap[id.get ? id.get('clientId') : id] || id;
+		}
+
+		row = Y.one(Y.Lang.isNumber(id) ? this.getCell([id,0]).ancestor() : '#' + id);
 	}
 
-	return tbody &&
-		Y.one(Y.Lang.isNumber(id) ? this.getCell([id,0]).ancestor() : '#' + id);
+	return row;
 }
 
 function replaceGetters()
 {
-	var body = this.get('host').body;
-	if (body instanceof Y.DataTable.BodyView)
+	var view = this.get('host').view;
+	if (view instanceof Y.DataTable.TableView &&
+		view.body instanceof Y.DataTable.BodyView)
 	{
+		var body = view.body;
+
 		this.orig_getCell = body.getCell;
 		this.orig_getRow  = body.getRow;
 
@@ -303,15 +319,15 @@ function replaceGetters()
 
 function restoreGetters()
 {
-	var body = this.get('host').body;
-	if (this.orig_getCell)
+	var view = this.get('host').view;
+	if (view.body && this.orig_getCell)
 	{
-		body.getCell = this.orig_getCell;
+		view.body.getCell = this.orig_getCell;
 	}
 
-	if (this.orig_getRow)
+	if (view.body && this.orig_getRow)
 	{
-		body.getRow = this.orig_getRow;
+		view.body.getRow = this.orig_getRow;
 	}
 }
 
@@ -328,7 +344,7 @@ Y.extend(RowExpansion, Y.Plugin.Base,
 		analyzeColumns.call(this);
 		this.afterHostEvent('columnsChange', analyzeColumns);
 
-		this.afterHostEvent('renderTable', replaceGetters);
+		this.afterHostEvent('table:renderTable', replaceGetters);
 	},
 
 	destructor: function()
@@ -341,4 +357,4 @@ Y.namespace("Plugin");
 Y.Plugin.DataTableRowExpansion = RowExpansion;
 
 
-}, 'gallery-2012.04.12-13-50' ,{requires:['datatable','plugin','gallery-funcprog','gallery-node-optimizations','gallery-math'], skinnable:true});
+}, 'gallery-2012.08.08-20-03' ,{requires:['datatable','plugin','gallery-funcprog','gallery-node-optimizations','gallery-math'], skinnable:true});
